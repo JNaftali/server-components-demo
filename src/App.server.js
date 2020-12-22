@@ -15,7 +15,14 @@ export default function App({location}) {
   return (
     <>
       <nav>
-        <Link href="/breads">Go to breads</Link>
+        <ul>
+          <li>
+            <Link href="/">Go home</Link>
+          </li>
+          <li>
+            <Link href="/breads">Go to breads</Link>
+          </li>
+        </ul>
       </nav>
       <Suspense fallback={<div>boop</div>}>
         <Router location={location} />

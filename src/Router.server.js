@@ -8,13 +8,27 @@ import {fetch} from 'react-fetch';
  */
 export default function Router({location}) {
   const response = fetch(
-    'http://bakerydemo.lanshark.com/api/v2/pages/find/?html_path=' +
-      location.replace(/"/g, '')
+    `http://localhost:8000/api/v2/pages/find/?html_path=${location}`
   );
-  const url = new URL(response.headers.location);
-  url.host = 'bakerydemo.lanshark.com';
-  url.port = '80';
-  const page = fetch(url.toString()).json();
+
+  if (response.status >= 500) {
+    return (
+      <>
+        <div>Server's dead</div>
+        <h1>
+          {response.status} - {response.statusText}
+        </h1>
+      </>
+    );
+  }
+
+  if (response.status === 404) {
+    return <div>couldn't find wagtail page</div>;
+  }
+
+  // console.log('should be working: ', response.headers.location);
+
+  const page = fetch(response.headers.location).json();
   return (
     <>
       <h1>{page.title}</h1>
