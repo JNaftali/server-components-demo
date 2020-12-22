@@ -140,6 +140,13 @@ app.get('/sleep/:ms', function(req, res) {
 app.use(express.static('build'));
 app.use(express.static('public'));
 
+/**
+ * Workaround for the fact that the script tags use relative urls
+ */
+app.get(/\.(js|css)$/, async function(req, res) {
+  res.redirect(req.url.replace(/^.*\//, '/'));
+});
+
 app.get(
   '*',
   handleErrors(async function(_req, res) {

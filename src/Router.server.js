@@ -1,6 +1,8 @@
 // @ts-check
 import {fetch} from 'react-fetch';
 
+import {wagtailConfig} from './wagtail.config';
+
 /**
  *
  * @param {object} props
@@ -29,6 +31,10 @@ export default function Router({location}) {
   // console.log('should be working: ', response.headers.location);
 
   const page = fetch(response.headers.location).json();
+
+  const PageComponent = wagtailConfig.pageTypes[page.meta.type];
+  if (PageComponent) return <PageComponent page={page} />;
+
   return (
     <>
       <h1>{page.title}</h1>
