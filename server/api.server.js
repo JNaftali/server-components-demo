@@ -79,16 +79,11 @@ async function renderReactTree(res, props) {
   pipeToNodeWritable(React.createElement(ReactApp, props), res, moduleMap);
 }
 
-function sendResponse(req, res, redirectToId) {
-  const location = JSON.parse(req.query.location);
-  if (redirectToId) {
-    location.selectedId = redirectToId;
-  }
+function sendResponse(req, res, redirectToLocation) {
+  const location = redirectToLocation ?? req.query.location;
   res.set('X-Location', JSON.stringify(location));
   renderReactTree(res, {
-    selectedId: location.selectedId,
-    isEditing: location.isEditing,
-    searchText: location.searchText,
+    location,
   });
 }
 

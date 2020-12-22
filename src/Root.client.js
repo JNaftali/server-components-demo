@@ -6,7 +6,7 @@
  *
  */
 
-import {useState, Suspense} from 'react';
+import {useState, Suspense, useCallback} from 'react';
 import {ErrorBoundary} from 'react-error-boundary';
 
 import {useServerResponse} from './Cache.client';
@@ -22,12 +22,24 @@ export default function Root({initialCache}) {
   );
 }
 
+function getLocation() {
+  const url = new URL(window.location);
+  return url.toString().replace(url.origin, '');
+}
+
 function Content() {
-  const [location, setLocation] = useState({
-    selectedId: null,
-    isEditing: false,
-    searchText: '',
-  });
+  const [location, oldSetLocation] = useState(getLocation());
+
+  const setLocation = useCallback(
+    /**
+     *
+     * @param {URL} newUrl
+     */
+    (newUrl) => {
+      oldSetLocation(newUrl.toString().replace(newUrl.origin, ''));
+    },
+    [setLocation]
+  );
   const response = useServerResponse(location);
   return (
     <LocationContext.Provider value={[location, setLocation]}>
