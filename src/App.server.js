@@ -8,7 +8,12 @@
 // @ts-check
 import {Suspense} from 'react';
 
-export default function App(props) {
-  console.log(props);
-  return <div>boop</div>;
+import Router from './Router.server';
+
+export default function App({location}) {
+  return (
+    <Suspense fallback={<div>boop</div>}>
+      <Router location={location} />
+    </Suspense>
+  );
 }
