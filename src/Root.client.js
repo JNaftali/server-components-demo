@@ -6,11 +6,14 @@
  *
  */
 
-import {useState, Suspense, useCallback} from 'react';
+import {useState, Suspense, useCallback, useRef, useEffect} from 'react';
 import {ErrorBoundary} from 'react-error-boundary';
 
 import {useServerResponse} from './Cache.client';
 import {LocationContext} from './LocationContext.client';
+import {createBrowserHistory} from 'history';
+
+const history = createBrowserHistory();
 
 export default function Root({initialCache}) {
   return (
@@ -29,6 +32,15 @@ function getLocation() {
 
 function Content() {
   const [location, oldSetLocation] = useState(getLocation());
+
+  const initialLoadRef = useRef(true);
+  useEffect(() => {
+    if (initialLoadRef.current) {
+      initialLoadRef.current = false;
+    } else {
+      history.push(location);
+    }
+  });
 
   const setLocation = useCallback(
     /**

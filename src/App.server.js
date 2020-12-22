@@ -9,11 +9,17 @@
 import {Suspense} from 'react';
 
 import Router from './Router.server';
+import Link from './Link.client';
 
 export default function App({location}) {
   return (
-    <Suspense fallback={<div>boop</div>}>
-      <Router location={location} />
-    </Suspense>
+    <>
+      <nav>
+        <Link href="/breads">Go to breads</Link>
+      </nav>
+      <Suspense fallback={<div>boop</div>}>
+        <Router location={location} />
+      </Suspense>
+    </>
   );
 }
