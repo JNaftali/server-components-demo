@@ -10,7 +10,7 @@ import {wagtailConfig} from './wagtail.config';
  */
 export default function Router({location}) {
   const response = fetch(
-    `http://localhost:8000/api/v2/pages/find/?html_path=${location}`
+    `${wagtailConfig.domain}/api/v2/pages/find/?html_path=${location}`
   );
 
   if (response.status >= 500) {
