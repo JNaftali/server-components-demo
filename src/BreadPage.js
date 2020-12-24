@@ -1,23 +1,36 @@
 import {fetch} from 'react-fetch';
-import {wagtailConfig} from './wagtail.config';
+
+/**
+ *
+ * @param {string} thing
+ */
+function getImage(thing) {
+  const response = fetch(
+    `https://en.wikipedia.org/api/rest_v1/page/summary/${thing}`
+  );
+
+  if (response.status >= 300) return undefined;
+
+  const wikipediaPage = response.json();
+
+  if (wikipediaPage) return wikipediaPage.thumbnail;
+}
 
 export default function BreadPage({page}) {
-  const wikipediaPage = fetch(
-    `https://en.wikipedia.org/api/rest_v1/page/summary/${page.title}`
-  ).json();
-
-  const image = wikipediaPage.thumbnail;
+  const image = getImage(page.title);
 
   return (
     <>
       <h1>{page.title}</h1>
       <div>{page.introduction}</div>
-      <img
-        height={image.height}
-        width={image.width}
-        src={image.source}
-        alt="bread pic"
-      />
+      {image && (
+        <img
+          height={image.height}
+          width={image.width}
+          src={image.source}
+          alt="bread pic"
+        />
+      )}
     </>
   );
 }
