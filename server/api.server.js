@@ -57,11 +57,9 @@ async function renderReactTree(res, props) {
 }
 
 function sendResponse(req, res, redirectToLocation) {
-  const location = redirectToLocation ?? JSON.parse(req.query.location);
-  res.set('X-Location', JSON.stringify(location));
-  renderReactTree(res, {
-    location,
-  });
+  const props = redirectToLocation ?? JSON.parse(req.query.location);
+  res.set('X-Location', JSON.stringify(props));
+  renderReactTree(res, props);
 }
 
 app.get('/react', function(req, res) {

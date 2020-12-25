@@ -11,7 +11,7 @@ import {Suspense} from 'react';
 import Router from './Router.server';
 import Link from './Link.client';
 
-export default function App({location}) {
+export default function App({pathname}) {
   return (
     <>
       <nav>
@@ -25,7 +25,7 @@ export default function App({location}) {
         </ul>
       </nav>
       <Suspense fallback={<div>boop</div>}>
-        <Router location={location} />
+        <Router pathname={pathname} />
       </Suspense>
     </>
   );

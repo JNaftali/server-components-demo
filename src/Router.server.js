@@ -6,11 +6,11 @@ import {wagtailConfig} from './wagtail.config';
 /**
  *
  * @param {object} props
- * @param {string} props.location
+ * @param {string} props.pathname
  */
-export default function Router({location}) {
+export default function Router({pathname}) {
   const response = fetch(
-    `${wagtailConfig.domain}/api/v2/pages/find/?html_path=${location}`
+    `${wagtailConfig.domain}/api/v2/pages/find/?html_path=${pathname}`
   );
 
   if (response.status >= 500) {

@@ -34,7 +34,7 @@ function Content() {
     };
   }, []);
 
-  const response = useServerResponse(pathname);
+  const response = useServerResponse({pathname});
   return response.readRoot();
 }
 
