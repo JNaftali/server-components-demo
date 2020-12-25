@@ -6,14 +6,11 @@
  *
  */
 
-import {useState, Suspense, useCallback, useRef, useEffect} from 'react';
+import {useState, Suspense, useEffect} from 'react';
 import {ErrorBoundary} from 'react-error-boundary';
 
 import {useServerResponse} from './Cache.client';
-import {LocationContext} from './LocationContext.client';
-import {createBrowserHistory} from 'history';
-
-const history = createBrowserHistory();
+import {history} from './history';
 
 export default function Root({initialCache}) {
   return (
@@ -25,39 +22,20 @@ export default function Root({initialCache}) {
   );
 }
 
-function getLocation() {
-  const url = new URL(window.location);
-  return url.toString().replace(url.origin, '');
-}
-
 function Content() {
-  const [location, oldSetLocation] = useState(getLocation());
+  const [pathname, setPathname] = useState(history.location.pathname);
 
-  const initialLoadRef = useRef(true);
   useEffect(() => {
-    if (initialLoadRef.current) {
-      initialLoadRef.current = false;
-    } else {
-      history.push(location);
-    }
-  });
+    const unlisten = history.listen(function HistoryChangeListener({location}) {
+      setPathname(location.pathname);
+    });
+    return () => {
+      unlisten();
+    };
+  }, []);
 
-  const setLocation = useCallback(
-    /**
-     *
-     * @param {URL} newUrl
-     */
-    (newUrl) => {
-      oldSetLocation(newUrl.toString().replace(newUrl.origin, ''));
-    },
-    [setLocation]
-  );
-  const response = useServerResponse(location);
-  return (
-    <LocationContext.Provider value={[location, setLocation]}>
-      {response.readRoot()}
-    </LocationContext.Provider>
-  );
+  const response = useServerResponse(pathname);
+  return response.readRoot();
 }
 
 function Error({error}) {
