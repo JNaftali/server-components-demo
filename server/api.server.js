@@ -21,18 +21,10 @@ babelRegister({
 const express = require('express');
 const compress = require('compression');
 const {readFileSync} = require('fs');
-const {unlink, writeFile} = require('fs/promises');
 const {pipeToNodeWritable} = require('react-server-dom-webpack/writer');
 const path = require('path');
 const React = require('react');
 const ReactApp = require('../src/App.server').default;
-const {
-  db,
-  findNote,
-  insertNote,
-  editNote,
-  deleteNote,
-} = require('../src/db.server');
 
 const PORT = 4000;
 const app = express();
@@ -75,61 +67,6 @@ function sendResponse(req, res, redirectToLocation) {
 app.get('/react', function(req, res) {
   sendResponse(req, res, null);
 });
-
-const NOTES_PATH = path.resolve(__dirname, '../notes');
-
-app.post(
-  '/notes',
-  handleErrors(async function(req, res) {
-    const note = insertNote(req.body.title, req.body.body);
-    const insertedId = note.id;
-    await writeFile(
-      path.resolve(NOTES_PATH, `${insertedId}.md`),
-      req.body.body,
-      'utf8'
-    );
-    sendResponse(req, res, insertedId);
-  })
-);
-
-app.put(
-  '/notes/:id',
-  handleErrors(async function(req, res) {
-    const updatedId = Number(req.params.id);
-    editNote(updatedId, req.body.title, req.body.body);
-
-    await writeFile(
-      path.resolve(NOTES_PATH, `${updatedId}.md`),
-      req.body.body,
-      'utf8'
-    );
-    sendResponse(req, res, null);
-  })
-);
-
-app.delete(
-  '/notes/:id',
-  handleErrors(async function(req, res) {
-    deleteNote(req.params.id);
-    await unlink(path.resolve(NOTES_PATH, `${req.params.id}.md`));
-    sendResponse(req, res, null);
-  })
-);
-
-app.get(
-  '/notes',
-  handleErrors(async function(_req, res) {
-    res.json(db);
-  })
-);
-
-app.get(
-  '/notes/:id',
-  handleErrors(async function(req, res) {
-    const note = findNote(req.params.id);
-    res.json(note);
-  })
-);
 
 app.get('/sleep/:ms', function(req, res) {
   setTimeout(() => {

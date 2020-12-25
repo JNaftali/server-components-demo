@@ -40,7 +40,7 @@ The app won't work until you set up the database, as described below.
 
 There is no database in this fork.
 
-I replaced it with an object in `./src/db.server.js`.
+Instead it reads page data from an api call to a server running the [Wagtail](https://github.com/wagtail/wagtail/) [bakery demo](https://github.com/wagtail/bakerydemo)
 
 ## Notes about this app
 
