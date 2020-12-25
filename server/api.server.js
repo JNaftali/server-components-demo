@@ -33,7 +33,7 @@ app.use(compress());
 app.use(express.json());
 
 app.listen(PORT, () => {
-  console.log('React Notes listening at 4000...');
+  console.log(`React Notes listening at ${PORT}...`);
 });
 
 function handleErrors(fn) {
