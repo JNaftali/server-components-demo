@@ -23,6 +23,13 @@ export default function Root({initialCache}) {
 }
 
 function Content() {
+  const pathname = usePathname();
+
+  const response = useServerResponse({pathname});
+  return response.readRoot();
+}
+
+function usePathname() {
   const [pathname, setPathname] = useState(history.location.pathname);
 
   useEffect(() => {
@@ -33,9 +40,7 @@ function Content() {
       unlisten();
     };
   }, []);
-
-  const response = useServerResponse({pathname});
-  return response.readRoot();
+  return pathname;
 }
 
 function Error({error}) {
